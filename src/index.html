@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>question form</title>
+</head>
+<body>
+  <header class="header">
+    <div class="container-xxl">
+      <nav class="navbar navbar-expand-lg navbar-light">
+          <a class="navbar-brand" href="#">Navbar</a>
+        <div class="wrap">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>
+            </ul>
+          </div>
+          <div class="d-flex">
+            <button id="sign-in" class="sign-in modal-btn btn" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">Войти</button>
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div id="modal-content" class="modal-content">
+                <form id="register-form" class="form-floating">
+                  <div id="register-title" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
+                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="register-form__content form-floating mb-3">
+                      <div class="form-floating mb-4">
+                        <input type="text" class="form-control" id="userName" placeholder="aigerim">
+                        <label for="userName">Имя</label>
+                      </div>
+                      <div class="form-floating mb-4">
+                        <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
+                        <label for="userEmail">Адрес электронной почты</label>
+                      </div>
+                      <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="userPassword" placeholder="Пароль">
+                        <label for="userPassword">Придумайте пароль</label>
+                      </div>
+                      <p id="logged-msg" class="logged-msg"></p>
+                      <button id="auth-link" class="login ms-2">Вход</button>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button id="login-btn" type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <form id="auth-form" class="form-floating">
+                  <div id="auth-title" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Вход</h5>
+                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="auth-form__content form-floating mb-3">
+                      <div class="form-floating mb-4">
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                        <label for="email">Адрес электронной почты</label>
+                      </div>
+                      <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="password" placeholder="Пароль">
+                        <label for="password">Пароль</label>
+                      </div>
+                      <p id="user-dont-msg" class="user-dont-msg"></p>
+                      <button id="login-link" class="login ms-2">Регистрация</button>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button id="signin-btn" type="submit" class="btn btn-primary">Войти</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                 </div>
+                </div>
+              </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <main class="main">
+    <div class="container-fluid">
+      <div class="row justify-content-between">
+        <div class="sidebar col-3">
+        <h2 class="sidebar__text">Подкаст вопросы</h2>
+        </div>
+        <div class="content col-12 col-md-8">
+          <div class="pinned-post">
+            <h2 class="pinned-post__title title">Задай вопрос</h2>
+            <hr>
+           <form class="row g-3" id="form">
+            <div class="form-floating">
+              <input class="form-control" placeholder="Leave a comment here" id="question-input" style="height: 100px" required ></input>
+              <label for="question-input">Ваш вопрос:</label>
+            </div>
+              <button type="submit" class="btn btn-primary col-3" id="submit" disabled>
+               Задать вопрос
+              </button>
+        
+           </form>
+          </div>
+          <div class="recent-post">
+            <h2 class="recent-post__title title">Ваши вопросы</h2>
+            <hr>
+            <div id="list"></div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- <script src="dist/bundle.js"></script> -->
+</body>
+</html>
