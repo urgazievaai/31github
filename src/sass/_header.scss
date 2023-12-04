@@ -1,0 +1,21 @@
+@import '_vars.scss';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+}
+.wrap {
+  display: flex;
+  justify-content: end;
+  gap: 50px;
+}
+.navbar-collapse {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sign-in {
+  align-self: center;
+  text-decoration: none;
+  color: #000;
+}

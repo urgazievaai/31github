@@ -1,0 +1,48 @@
+@import '_vars.scss';
+
+.content {
+  margin: 60px 0;
+}
+.sidebar {
+  background-image: url(/src/assets/sidebarimg.png);
+  background-color: #eaedee;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  padding-top: 30px;
+  &__text {
+    font-size: 26px;
+  }
+}
+.pinned-post {
+  margin-bottom: 60px;
+}
+
+.title {
+  font-family: $font-family;
+  font-size: 18px;
+}
+
+.text {
+  font-size: 24px;
+}
+.desc {
+  font-size: 14px;
+}
+
+.login {
+  font-family: $font-family;
+  font-size: 16px;
+  color: #6c757d;
+  
+}
+#register-form, #auth-form {
+  display: none;
+}
+
+.auth-error, .logged-msg {
+  font-family: $font-family;
+  color: #ff2222;
+  font-size: 14px;
+  font-weight: 400;
+}
