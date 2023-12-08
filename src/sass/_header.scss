@@ -17,5 +17,29 @@
 .sign-in {
   align-self: center;
   text-decoration: none;
-  color: #000;
+  color: #fff;
+}
+.login, .auth {
+  background: #ffffff00;
+  color: $grey-color;
+  border: none;
+  font-size: 16px;
+  margin-top: 10px;
+}
+#register-form,
+#auth-form {
+  display: none;
+}
+.auth-error,
+.logged-msg {
+  display: flex;
+  gap: 8px;
+  color: #ff2222;
+  font-size: 14px;
+  font-weight: 400;
+  padding-left: 8px;
+}
+.login:hover, 
+.auth:hover {
+  color: #212529;
 }

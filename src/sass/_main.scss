@@ -1,18 +1,34 @@
-@import '_vars.scss';
+@import "_vars.scss";
 
 .content {
-  margin: 60px 0;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 .sidebar {
-  background-image: url(/src/assets/sidebarimg.png);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image: url(/src/assets/99px_ru_animacii_24834_rozovij_kot_jongliruet_planetami.gif);
+  margin: 0;
+  padding: 0;
   background-color: #eaedee;
+  // width: 300px;
+  height: 100vh;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
-  padding-top: 30px;
   &__text {
     font-size: 26px;
+    font-weight: 400;
+    color: $white-color;
+    margin: 50px 0 0 15px;
   }
+}
+.author{
+  color: $white-color;
+  font-size: 18px;
+  margin:0 0 50px 15px;
 }
 .pinned-post {
   margin-bottom: 60px;
@@ -21,6 +37,7 @@
 .title {
   font-family: $font-family;
   font-size: 18px;
+  margin: 0;
 }
 
 .text {
@@ -30,19 +47,34 @@
   font-size: 14px;
 }
 
-.login {
-  font-family: $font-family;
-  font-size: 16px;
-  color: #6c757d;
-  
+
+.recent-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
-#register-form, #auth-form {
-  display: none;
+.recent-post__text {
+  color: $grey-color;
+  font-size: 16px;
 }
 
-.auth-error, .logged-msg {
-  font-family: $font-family;
-  color: #ff2222;
-  font-size: 14px;
-  font-weight: 400;
+.btn {
+  background-color: $global-color;
+  color: $white-color;
+  cursor: pointer;
+}
+.btn:hover,
+.button:active {
+  border:  solid 1px $global-color ;
+  color: $global-color;
+}
+.btn:disabled{
+  background-color: $global-color;
+  border: none;
+  color: $white-color;
+  cursor: not-allowed;
+}
+.generete-url {
+  display: none;
 }
