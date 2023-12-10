@@ -14,13 +14,18 @@
     color: #fff;
   }
 }
-
 .navbar-collapse {
   display: flex;
   justify-content: flex-end;
 }
 
+
 .signin, .signup {
+  align-self: center;
+  text-decoration: none;
+  color: #fff;
+}
+.login, .auth {
   background: #ffffff00;
   color: $grey-color;
   border: none;

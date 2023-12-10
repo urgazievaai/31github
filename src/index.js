@@ -8,7 +8,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Question } from "./js/question";
 import { isValid } from "./js/util";
 
-
 //форма для вопросов
 const form = document.getElementById('form');
 const input = form.querySelector('#question-input');
@@ -45,6 +44,7 @@ function submitForm (event) {
   event.preventDefault()
   console.log(input.value)
 }
+
 
 const loginBtn = document.getElementById('loginBtn')
 const signUpLink = document.getElementById('sign-up-link')
