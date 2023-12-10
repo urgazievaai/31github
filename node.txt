@@ -1,5 +1,0 @@
- // return Question.getQuestions(credentials.user.getIdToken()) этот код не работает потому что метод Question.getQuestions возвращает promis а внешний код выполняется не дожидаясь ответа промиса в этом случае можно использовать async awaiy но так как мы пишем исп then на нужно написать так:
- //Здесь .then((idToken) => {...}) обрабатывает результат вызова getIdToken(). Когда промис разрешается, он передает значение idToken в следующий блок .then()
-  return user.getIdToken().then((idToken) => {
-   return Question.getQuestions(idToken);
-   });
