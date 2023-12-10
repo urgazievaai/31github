@@ -11,15 +11,15 @@
     <div class="container-xxl">
       <nav class="navbar navbar-expand-lg navbar-light">
           <a class="navbar-brand" href="#">Navbar</a>
-        <div class="wrap">
+        <div class="header-user-login">
           <div class="d-flex">
-            <button id="sign-in" class="sign-in modal-btn btn" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">Войти</button>
+            <button id="loginBtn" class="header-user-login__btn modal-btn btn" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">Войти</button>
           </div>
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog">
               <div id="modal-content" class="modal-content">
-                <form id="register-form" class="form-floating">
-                  <div id="register-title" class="modal-header">
+                <form id="register-form" class="register-form form-floating">
+                  <div id="register-title" class="register-form__header modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
                  <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
@@ -37,22 +37,22 @@
                         <input type="password" class="form-control" id="userPassword" placeholder="Пароль">
                         <label for="userPassword">Придумайте пароль</label>
                       </div>
-                      <p id="logged-msg" class="logged-msg"></p>
-                      <button id="auth-link" class="login ms-2">Вход</button>
+                      <p id="signup-msg" class="signup-msg"></p>
+                      <button id="sign-in-link" class="signin ms-2"><span>У вас уже есть аккаунт:</span> Вход</button>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button id="login-btn" type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        <button type="button" class="btn" data-bs-dismiss="modal">Закрыть</button>
+                        <button id="signup-btn" type="submit" class="btn">Зарегестрироваться</button>
                       </div>
                     </div>
                   </div>
                 </form>
-                <form id="auth-form" class="form-floating">
-                  <div id="auth-title" class="modal-header">
+                <form id="signin-form" class="signin-form form-floating" >
+                  <div id="signin-title" class="signin-form__header modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Вход</h5>
                  <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="auth-form__content form-floating mb-3">
+                    <div class="signin-form__content form-floating mb-3">
                       <div class="form-floating mb-4">
                         <input type="email" class="form-control" id="email" placeholder="name@example.com">
                         <label for="email">Адрес электронной почты</label>
@@ -61,11 +61,11 @@
                         <input type="password" class="form-control" id="password" placeholder="Пароль">
                         <label for="password">Пароль</label>
                       </div>
-                      <p id="user-dont-msg" class="user-dont-msg"></p>
-                      <button id="login-link" class="login ms-2">Регистрация</button>
+                      <p id="signin-msg" class="signin-msg"></p>
+                      <button id="sign-up-link" class="signup ms-2">Регистрация</button>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button id="signin-btn" type="submit" class="btn btn-primary">Войти</button>
+                        <button type="button" class="btn" data-bs-dismiss="modal">Закрыть</button>
+                        <button id="signin-btn" type="submit" class="btn">Войти</button>
                       </div>
                     </div>
                   </div>
@@ -73,41 +73,50 @@
                  </div>
                 </div>
               </div>
-        </div>
+          </div>
+         
+        
       </nav>
     </div>
   </header>
+ 
   <main class="main">
     <div class="container-fluid">
-      <div class="row justify-content-between">
-        <div class="sidebar col-3">
+      <div class="row">
+        <section class="sidebar col-3">
         <h2 class="sidebar__text">Подкаст вопросы</h2>
-        </div>
-        <div class="content col-12 col-md-8">
-          <div class="pinned-post">
-            <h2 class="pinned-post__title title">Задай вопрос</h2>
+          <p class="author">Aigerim</p>
+          </section>
+        <section class="content col-12 col-md-9">
+          <div class="content-wrap col-9">  <div class="pinned-post">
+            <h2 class="pinned-post__title title">Задайте вопрос</h2>
             <hr>
            <form class="row g-3" id="form">
             <div class="form-floating">
               <input class="form-control" placeholder="Leave a comment here" id="question-input" style="height: 100px" required ></input>
               <label for="question-input">Ваш вопрос:</label>
             </div>
-              <button type="submit" class="btn btn-primary col-3" id="submit" disabled>
-               Задать вопрос
-              </button>
+              <button type="submit" class="btn sudmit-quest" id="submit" disabled>Задать вопрос</button>
         
            </form>
           </div>
           <div class="recent-post">
-            <h2 class="recent-post__title title">Ваши вопросы</h2>
+            <div class="recent-header">
+              <h2 class="recent-post__title title">Ваши вопросы</h2>
+              <button class="btn generete-url">сгенерировать ссылку</button></div>
+            
             <hr>
-            <div id="list"></div>
+            <!-- <h3 class="recent-post__text text">Чтобы посмотреть все вопросы зарегестрируйтесь или авторизуйтес</h3> -->
+            <ul id="dbList"></ul>
+            <ul id="list">
+            </ul>
             
           </div>
         </div>
+        
+        </section>
       </div>
     </div>
-  </main>
-  <!-- <script src="dist/bundle.js"></script> -->
+  </main> 
 </body>
 </html>
