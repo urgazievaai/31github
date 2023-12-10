@@ -1,0 +1,46 @@
+@import '_vars.scss';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+}
+.header-user-login {
+  display: flex;
+  justify-content: end;
+  gap: 50px;
+  &__btn {
+    align-self: center;
+    text-decoration: none;
+    color: #fff;
+  }
+}
+
+.navbar-collapse {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.signin, .signup {
+  background: #ffffff00;
+  color: $grey-color;
+  border: none;
+  font-size: 16px;
+  margin-top: 10px;
+}
+.signin:hover, 
+.signup:hover {
+  color: #212529;
+}
+.register-form,
+.signin-form{
+  display: none;
+}
+.signin-msg,
+.signup-msg {
+  display: flex;
+  gap: 8px;
+  color: #ff2222;
+  font-size: 14px;
+  font-weight: 400;
+  padding-left: 8px;
+}
