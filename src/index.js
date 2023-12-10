@@ -71,7 +71,7 @@ function showSignIn(event) {
 //firebase  loginUser 
 
 //signIn User 
-import{ regFormHandler } from "./js/app";
+import{ regFormHandler } from "./js/register";
 import { signInUser } from "./js/auth";
 
 
