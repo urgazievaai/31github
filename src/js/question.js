@@ -1,3 +1,20 @@
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onChildAdded } from "firebase/database"
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4omcKQ0OYERr2K-Ufd4xAmf_yl4o_V-U",
+  authDomain: "podcast-questions-19424.firebaseapp.com",
+  databaseURL:
+    "https://podcast-questions-19424-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "podcast-questions-19424",
+  storageBucket: "podcast-questions-19424.appspot.com",
+  messagingSenderId: "962804388469",
+  appId: "1:962804388469:web:c34ea30c7b7c65ddca9e3c",
+};  
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 export class Question {
   static create(question) {
     return fetch(
@@ -24,23 +41,13 @@ export class Question {
       `https://podcast-questions-19424-default-rtdb.asia-southeast1.firebasedatabase.app/questions.json?auth=${token}`
     )
       .then((response) => response.json())
-      .then((questions) => {
-        localStorage.setItem("questions", JSON.stringify(questions));
-        return questions;
-      })
-      .then((questions) => {
-        const responseArray = Object.values(questions);
-        const renderArray = responseArray.length ? responseArray.map(everyQues).join("") : `<h3 class="recent-post__text text"> Пока вопросов нет</h3>`;
-        const ui = document.getElementById("dbList");
-        ui.innerHTML = renderArray;
-      })
-
+      .then(getQuesDB)
       .catch((error) => {
         console.error("Error fetching questions:", error);
         throw error;
       });
-  }
-
+  } 
+  
   static renderlist() {
     const questions = getFromLocalStorage();
     const html = questions.length ? questions.map(everyQues).join("") : `<p class="recent-post__text text">Вы еще не задали свой вопрос</p>`;
@@ -48,6 +55,30 @@ export class Question {
     list.innerHTML = html;
   }
 }
+
+
+let cureentQues = []
+function getQuesDB(questions) {
+  cureentQues = Object.values(questions || {})
+  const newQuestion = Object.values(questions || {});
+  const filterQues = newQuestion.filter((newQues)=> !cureentQues.some(existingQues => existingQues.id === newQues.id))
+  cureentQues = [...cureentQues, ...filterQues];
+  renderQues()
+  console.log(cureentQues)
+  return cureentQues;
+  
+}
+const quesRef = ref(db, 'questions/')
+onChildAdded(quesRef, (snapshot) => {
+  const newQues = snapshot.val();
+  getQuesDB({ [snapshot.key]: newQues });
+});
+
+function renderQues() {
+  const renderArray = cureentQues.length ? cureentQues.map(everyQues).join("") : `<h3 class="recent-post__text text"> Пока вопросов нет</h3>`;
+        const ui = document.getElementById("dbList");
+        ui.innerHTML = renderArray;
+} 
 
 function getToLocalStorage(question) {
   const all = getFromLocalStorage();
@@ -69,3 +100,5 @@ function everyQues(question) {
   </li>
   `;
 }
+
+
