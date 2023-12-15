@@ -12,8 +12,9 @@
       <nav class="navbar navbar-expand-lg navbar-light">
           <a class="navbar-brand" href="#">Navbar</a>
         <div class="header-user-login">
-          <div class="d-flex">
+          <div class="d-flex gap-2">
             <button id="loginBtn" class="header-user-login__btn modal-btn btn" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">Войти</button>
+            <button id="signOutBtn" class="header-user-login__sign-out btn">Выйти</button>
           </div>
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
             <div class="modal-dialog">
@@ -40,8 +41,8 @@
                       <p id="signup-msg" class="signup-msg"></p>
                       <button id="sign-in-link" class="signin ms-2"><span>У вас уже есть аккаунт:</span> Вход</button>
                       <div class="modal-footer">
-                        <button type="button" class="btn" data-bs-dismiss="modal">Закрыть</button>
-                        <button id="signup-btn" type="submit" class="btn">Зарегестрироваться</button>
+                        <button type="button" class="close-btn btn" data-bs-dismiss="modal">Закрыть</button>
+                        <button id="signup-btn" type="submit" class="btn">Зарегистрироваться</button>
                       </div>
                     </div>
                   </div>
@@ -64,7 +65,7 @@
                       <p id="signin-msg" class="signin-msg"></p>
                       <button id="sign-up-link" class="signup ms-2">Регистрация</button>
                       <div class="modal-footer">
-                        <button type="button" class="btn" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="close-btn btn" data-bs-dismiss="modal">Закрыть</button>
                         <button id="signin-btn" type="submit" class="btn">Войти</button>
                       </div>
                     </div>
@@ -85,32 +86,27 @@
       <div class="row">
         <section class="sidebar col-3">
         <h2 class="sidebar__text">Подкаст вопросы</h2>
-          <p class="author">Aigerim</p>
+          <p class="author"></p>
           </section>
         <section class="content col-12 col-md-9">
-          <div class="content-wrap col-9">  <div class="pinned-post">
+          <div class="content-wrap col-9"> 
+           <div class="pinned-post">
             <h2 class="pinned-post__title title">Задайте вопрос</h2>
             <hr>
            <form class="row g-3" id="form">
             <div class="form-floating">
-              <input class="form-control" placeholder="Leave a comment here" id="question-input" style="height: 100px" required ></input>
+              <input class="form-control" placeholder="Leave a comment here" id="question-input" style="height:100px" required ></input>
               <label for="question-input">Ваш вопрос:</label>
             </div>
               <button type="submit" class="btn sudmit-quest" id="submit" disabled>Задать вопрос</button>
         
            </form>
           </div>
-          <div class="recent-post">
             <div class="recent-header">
               <h2 class="recent-post__title title">Ваши вопросы</h2>
-              <button class="btn generete-url">сгенерировать ссылку</button></div>
-            
             <hr>
-            <!-- <h3 class="recent-post__text text">Чтобы посмотреть все вопросы зарегестрируйтесь или авторизуйтес</h3> -->
             <ul id="dbList"></ul>
-            <ul id="list">
-            </ul>
-            
+            <ul id="list"></ul>
           </div>
         </div>
         
