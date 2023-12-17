@@ -55,32 +55,33 @@ export class Question {
     list.innerHTML = html;
   }
 }
-function fromDb () {
+
+let cureentQues = []
+function fromDb (questions) {
   console.log('это яяя')
-  let cureentQues = []
-function getQuesDB(questions, callback) {
   cureentQues = Object.values(questions || {})
-  const newQuestion = Object.values(questions || {});
-  const filterQues = newQuestion.filter((newQues)=> !cureentQues.some(existingQues => existingQues.id === newQues.id))
-  cureentQues = [...cureentQues, ...filterQues];
-  callback()
   console.log(cureentQues)
+  return renderQues()
+// function getQuesDB(questions) {
   
+  // const newQuestion = Object.values(questions || {});
+  // const filterQues = newQuestion.filter((newQues)=> !cureentQues.some(existingQues => existingQues.id === newQues.id))
+  // cureentQues = [...cureentQues, ...filterQues];
+  // callback()
+//   console.log(cureentQues)
+  
+// }
+// const quesRef = ref(db, 'questions/')
+// onChildAdded(quesRef, (snapshot) => {
+//   const newQues = snapshot.val();
+//   getQuesDB({ [snapshot.key]: newQues }, renderQues());
+// });
 }
-const quesRef = ref(db, 'questions/')
-onChildAdded(quesRef, (snapshot) => {
-  const newQues = snapshot.val();
-  getQuesDB({ [snapshot.key]: newQues }, renderQues());
-});
-
-
 function renderQues() {
   const renderArray = cureentQues.length ? cureentQues.map(everyQues).join("") : `<h3 class="recent-post__text text"> Пока вопросов нет</h3>`;
         const ui = document.getElementById("dbList");
         ui.innerHTML = renderArray;
 } 
-return {getQuesDB, renderQues}
-}
 
 function getToLocalStorage(question) {
   const all = getFromLocalStorage();
