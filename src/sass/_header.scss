@@ -6,12 +6,24 @@
 }
 .header-user-login {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 50px;
   &__btn {
     align-self: center;
     text-decoration: none;
-    color: #fff;
+    color: $white-color;
+    padding: 5px 42px;
+  }
+  &__sign-out {
+    display: none;
+    background: transparent;
+    border: solid  1px $global-color;
+    color: $global-color;
+    padding: 5px 20px;
+    &:hover {
+      background-color: $global-color;
+      color: $white-color;
+    }
   }
 }
 .navbar-collapse {
@@ -23,22 +35,30 @@
 .signin, .signup {
   align-self: center;
   text-decoration: none;
-  color: #fff;
-}
-.login, .auth {
-  background: #ffffff00;
+  background: transparent;
   color: $grey-color;
   border: none;
   font-size: 16px;
   margin-top: 10px;
+  &:hover {
+    color: #212529;
+  }
 }
-.signin:hover, 
-.signup:hover {
-  color: #212529;
+
+.register-form {
+  display: block;
 }
-.register-form,
 .signin-form{
   display: none;
+}
+.close-btn {
+  background: transparent;
+    border: solid  1px $global-color;
+    color: $global-color;
+    &:hover {
+      background-color: $global-color;
+      color: $white-color;
+    }
 }
 .signin-msg,
 .signup-msg {
