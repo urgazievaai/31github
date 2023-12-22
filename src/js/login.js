@@ -1,171 +1,151 @@
-import { initializeApp } from "firebase/app";
+import { app } from "./firebaseConfig";
 import { getDatabase, get, set, ref, child } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword  } from "firebase/auth";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import { Question } from "./question";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB4omcKQ0OYERr2K-Ufd4xAmf_yl4o_V-U",
-  authDomain: "podcast-questions-19424.firebaseapp.com",
-  databaseURL:
-    "https://podcast-questions-19424-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "podcast-questions-19424",
-  storageBucket: "podcast-questions-19424.appspot.com",
-  messagingSenderId: "962804388469",
-  appId: "1:962804388469:web:c34ea30c7b7c65ddca9e3c",
-};
-
-
-const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 const auth = getAuth(app);
 const dbref = ref(db);
 
-//регистрация пользователя 
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const userPassword = document.getElementById("userPassword");
+//регистрация пользователя
+const userNameInput = document.getElementById("userName");
+const userEmailInput = document.getElementById("userEmail");
+const userPasswordInput = document.getElementById("userPassword");
 const regErrorMsg = document.getElementById("signup-msg");
 const modalWindow = document.getElementById("exampleModal");
-const signOut = document.getElementById("signOutBtn") 
-const userAccName = document.querySelector(".author")
 
-signOut.addEventListener('click', userSignOut)
+const loginBtn = document.getElementById('loginBtn')
+
 //при передаче email на базу эта функция все не допустимые знаки меняет на допустимый
 function encodeEmail(email) {
   return email.replace(/[.,#$[\]]/g, "_");
 }
 
+//обработчик формы регистрации
 function regFormHandler(event) {
+  const userName = userNameInput.value;
+  const userEmail = userEmailInput.value;
+  const userPassword = userPasswordInput.value;
+
   event.preventDefault();
   // Проверяем существование пользователя в базе данных по email
-  get(ref(db, "AuthUserList/" + encodeEmail(userEmail.value))).then(() => {
-    return createUserWithEmailAndPassword(
-      auth,
-      userEmail.value,
-      userPassword.value
+  get(ref(db, "AuthUserList/" + encodeEmail(userEmail)))
+  return createUserWithEmailAndPassword(auth, userEmail, userPassword)
+    .then(
+      (credentials) => {
+        const user = credentials.user;
+        console.log(user)
+        set(ref(db, "AuthUserList/" + user.uid), {
+          userUid: user.uid,
+          userName: userName,
+          userEmail: userEmail,
+        });
+        localStorage.setItem("user-creds", JSON.stringify({userUid: user.uid}))
+        
+      }
     )
-      .then((credentials) => {
-        const uid = credentials.user.uid;
-        // Сохраняем информацию о пользователе в базу данных
-        set(ref(db, "AuthUserList/" + uid), {
-          useruid: uid,
-          userName: userName.value,
-          userEmail: userEmail.value,
-        })
-          .then(() => {
-            localStorage.setItem("uid", JSON.stringify(uid));
-          })
-          .then(() => {
-            modalWindow.classList.remove("show");
-            const backdropElements =
-              document.querySelectorAll(".modal-backdrop");
-            backdropElements.forEach((backdropElement) => {
-              backdropElement.parentNode.removeChild(backdropElement);
-            });
-            userAccName.innerHTML = `<span>${userName.value}</span>`
-            console.log("work");
-            console.log("dont work");
-          })
-          .catch((error) => {
-            console.error("Ошибка сохранения данных пользователя:", error);
-          })
-          .catch((error) => {
-            console.log("ошибка получения вопрсов:", error);
-          });
-      })
-      .catch((error) => {
-        regErrorMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+    .then(() => {
+      loginBtn.style.display = 'none'
+      return removeBg()
+})
+    // Сохраняем информацию о пользователе в базу данных
+    .catch((error) => {
+      regErrorMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
         <path d="M6.13683 3.21846C5.78463 3.382 5.63369 3.57068 5.63369 3.84427C5.63369 4.02351 5.66199 4.08012 6.04565 4.64615C6.39154 5.16186 6.49532 5.24993 6.76576 5.24993C6.94815 5.24993 7.20602 5.12099 7.31923 4.97634C7.41041 4.85684 7.45758 4.64615 7.42614 4.51092C7.3947 4.36941 6.97018 3.49521 6.87268 3.36313C6.7752 3.23733 6.57709 3.13672 6.41984 3.13672C6.3601 3.13672 6.23117 3.17445 6.13683 3.21846ZM13.4136 3.19646C13.3413 3.2279 13.2469 3.30337 13.2029 3.36311C13.1023 3.49205 12.6809 4.36627 12.6463 4.51092C12.5331 4.98891 13.1526 5.42288 13.5928 5.17443C13.6935 5.11783 13.7878 5.00148 14.0268 4.64613C14.4104 4.08009 14.4387 4.02349 14.4387 3.84424C14.4387 3.57066 14.2878 3.38198 13.9356 3.21846C13.7312 3.12099 13.5897 3.11783 13.4136 3.19646ZM9.7186 4.09269C9.53935 4.13986 9.3098 4.27193 9.17772 4.40401C9.04249 4.54238 8.44501 5.34113 7.8947 6.12729C6.15256 8.60842 4.58338 11.4323 3.41984 14.1745L3.22803 14.6304V14.9606C3.22803 15.2688 3.23432 15.3034 3.32866 15.4984C3.50791 15.8631 3.8601 16.1242 4.27206 16.187C4.37267 16.2028 4.95131 16.2436 5.55508 16.2814C8.75319 16.4669 11.3412 16.448 14.6274 16.2185C15.7563 16.1367 15.9419 16.1116 16.162 16.0078C16.5394 15.8285 16.8224 15.4134 16.8538 14.9889C16.8727 14.7185 16.8349 14.577 16.618 14.0644C15.4576 11.3411 13.9041 8.56125 12.1494 6.06125C11.5802 5.25306 10.9607 4.44174 10.8349 4.34427C10.5016 4.08012 10.0991 3.98891 9.7186 4.09269ZM10.4356 7.37887C10.6368 7.4166 10.7815 7.52981 10.8758 7.72476L10.9607 7.89457V10.9575L10.8758 11.1273C10.7343 11.4134 10.5488 11.4983 10.0456 11.5015C9.69343 11.5015 9.48904 11.4543 9.35697 11.338C9.13055 11.1367 9.13999 11.2279 9.13999 9.42604C9.13999 7.96061 9.14626 7.7971 9.19343 7.70906C9.2752 7.56125 9.45444 7.41974 9.58652 7.39773C9.65256 7.38514 9.72173 7.37257 9.73746 7.36627C9.80036 7.34427 10.3066 7.3537 10.4356 7.37887ZM10.6243 12.5927C10.8287 12.6996 10.9167 12.8443 10.9544 13.1242C11.0016 13.4952 10.9639 14.1116 10.8853 14.2657C10.7438 14.5424 10.4702 14.6367 9.88527 14.6021C9.50162 14.5801 9.35381 14.5172 9.22803 14.3254C9.13999 14.1965 9.13999 14.187 9.13055 13.6273C9.11796 13.0298 9.13683 12.8914 9.25319 12.7468C9.40098 12.5581 9.60853 12.5078 10.14 12.5235C10.4261 12.5298 10.5331 12.5455 10.6243 12.5927Z" fill="#FF2828"/>
         <path d="M10.1818 4.09172C10.0285 4.16141 9.73844 4.53353 9.60636 4.66561C9.47115 4.80398 9.17792 5.14124 8.62759 5.9274C7.06707 8.47851 6.72509 9.05634 5.1567 11.9101L4.26283 13.8912L3.90823 14.6106C3.90823 14.9188 3.89649 15.6758 4.35481 15.9667C4.45542 15.9824 4.94205 16.2513 5.54582 16.289C8.74393 16.4746 11.332 16.4557 14.6181 16.2261C15.7471 16.1444 15.9326 16.1192 16.1527 16.0154C16.5301 15.8362 16.8131 15.4211 16.8446 14.9966C16.8634 14.7261 16.8257 14.5846 16.6087 14.072C15.4483 11.3488 13.8949 8.56891 12.1402 6.06891C11.571 5.26073 10.9601 4.42917 10.8304 4.33936C10.5238 4.12709 10.3351 4.02205 10.1818 4.09172ZM10.4263 7.38653C10.6276 7.42426 10.7722 7.53747 10.8666 7.73242L10.9515 7.90223V10.9651L10.8666 11.1349C10.7251 11.4211 10.5395 11.506 10.0364 11.5092C9.68419 11.5092 9.47978 11.462 9.34771 11.3456C9.12129 11.1444 9.13072 11.2356 9.13072 9.4337C9.13072 7.96827 9.13702 7.80476 9.18419 7.71671C9.26594 7.56891 9.44518 7.4274 9.57726 7.40539C9.64329 7.3928 9.71249 7.38023 9.7282 7.37393C9.7911 7.35193 10.2974 7.36136 10.4263 7.38653ZM10.615 12.6003C10.8194 12.7073 10.9074 12.8519 10.9452 13.1318C10.9923 13.5029 10.9546 14.1192 10.876 14.2733C10.7345 14.55 10.4609 14.6444 9.87601 14.6098C9.49235 14.5878 9.34457 14.5249 9.21877 14.3331C9.13072 14.2041 9.13072 14.1947 9.12129 13.6349C9.10872 13.0375 9.12759 12.8991 9.24393 12.7544C9.39174 12.5658 9.59929 12.5154 10.1307 12.5312C10.4169 12.5375 10.5238 12.5532 10.615 12.6003Z" fill="#FF7582"/>
         <path d="M3.48602 5.84163C3.33191 5.8888 3.18727 6.02717 3.06462 6.24415C2.88538 6.56491 2.91054 6.8259 3.1401 7.04288C3.28474 7.17812 4.27217 7.63408 4.42311 7.63408C4.81304 7.63408 5.15583 7.16868 5.03632 6.80076C4.97658 6.61835 4.86337 6.51144 4.37908 6.19069C3.81304 5.81019 3.71557 5.77246 3.48602 5.84163ZM16.247 5.84793C16.0961 5.90453 15.2439 6.4863 15.1558 6.59321C14.9735 6.81019 14.9672 7.0712 15.1401 7.33849C15.2061 7.43913 15.2879 7.51774 15.3822 7.56177C15.615 7.68125 15.7156 7.66238 16.3099 7.37937C17.0049 7.05234 17.1181 6.94227 17.1244 6.60894C17.1244 6.47687 17.1024 6.41083 17.0018 6.23472C16.9231 6.09951 16.8288 5.98314 16.7502 5.9297C16.6055 5.82906 16.3885 5.79446 16.247 5.84793ZM2.42311 9.55233C2.2816 9.59321 2.17469 9.68441 2.08979 9.82906C2.01745 9.9517 2.00488 10.0083 2.00488 10.2253C2.00802 10.6026 2.1338 10.8133 2.41682 10.9077C2.59606 10.9674 3.65583 10.8888 3.83507 10.8039C4.27847 10.5932 4.29418 9.89196 3.85708 9.66554C3.7596 9.61523 3.62123 9.59321 3.21243 9.56177C2.61809 9.51774 2.53632 9.51774 2.42311 9.55233ZM16.8131 9.56177C16.2848 9.60578 16.1433 9.65295 16.0175 9.83535C15.8539 10.0775 15.8571 10.4171 16.0238 10.6372C16.1684 10.8228 16.3068 10.8637 16.9577 10.9077C17.4105 10.936 17.5678 10.936 17.6558 10.9077C17.9389 10.8133 18.0646 10.6026 18.0678 10.2253C18.0678 10.0052 18.0552 9.9517 17.9829 9.82906C17.8131 9.5366 17.6433 9.49573 16.8131 9.56177Z" fill="#FF2828"/>
       </svg>
-      <span> ${errorMsg[error.code]||'Произошла ошибка'}</span>`
-      });
-  });
+      <span> ${errorMsg[error.code] || "Произошла ошибка"}</span>`;
+      console.error(error);
+    });
 }
-
 export { regFormHandler };
 
 const errorMsg = {
-  'auth/email-already-in-use': 'Этот email уже используется',
-  'auth/invalid-email': 'Некорректный email',
-  'auth/operation-not-allowed': 'Операция не разрешена',
-  'auth/weak-password': 'Слабый пароль(пароль должен состоять из более 6 символов)',
-  'auth/invalid-login-credentials': 'Вы ввели неправильный пароль или email',
-  'auth/user-not-found': 'Пользователь с таким email не найден'
-}
+  "auth/email-already-in-use": "Этот email уже используется",
+  "auth/invalid-email": "Некорректный email",
+  "auth/operation-not-allowed": "Операция не разрешена",
+  "auth/weak-password":
+    "Слабый пароль(пароль должен состоять из более 6 символов)",
+  "auth/invalid-login-credentials": "Вы ввели неправильный пароль или email",
+  "auth/user-not-found": "Пользователь с таким email не найден",
+};
 
-function userAcc() {
-  signOut.style.display = "block"
-  userAccName.innerHTML = `<span>${userName.value}</span>`
-  userSignOut()
-  
-}
+// function userAcc() {
+//   signOut.style.display = "block";
+//   userAccName.innerHTML = `<span>${userName.value}</span>`;
+//   userSignOut();
+// }
 
-function userSignOut() {
-  console.log('user ущел')
-}
 
 //авторизация пользователя
 const loginErrorMsg = document.getElementById("signin-msg");
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 
 function signInUser(event) {
+  const email = emailInput.value;
+  const password = passwordInput.value;
   event.preventDefault();
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  signInWithEmailAndPassword(auth, email, password)
     .then((credentials) => {
-      //получаем пользователя из базы данных из ветки AuthUserList
-      return (
-        get(child(dbref, "AuthUserList/" + credentials.user.uid))
-          //дальше выполняем проверку наличия полтзователя
-          .then((snapshot) => {
+      const user = credentials.user
+      console.log(user)
+      return get(child(dbref, "AuthUserList/" + credentials.user.uid)).then((snapshot) => {
             if (snapshot.exists) {
+             
               //при успешном авторизации в user сохраняем данные пользователя которые нам возвращает промис чтобы получить токен
-              const user = credentials.user;
-              console.log("user", credentials);
-              //при успешной авторизации данные плтзователя сохпаняем в localstorage
-              localStorage.setItem("user-creds", JSON.stringify({
-                userName: snapshot.val().userName,
-                userUid: shapshot.val().uid
-              } 
-              ))
-              //Здесь .then((idToken) => {...}) обрабатывает результат вызова getIdToken(). Когда промис разрешается, он передает значение idToken в следующий блок .then()
-                return user.getIdToken().then((idToken) => {
-                  return Question.getQuestions(idToken);
-                })  
-            }
-            // setInterval(Question.getQuestions(idToken), 3000)
-          })
-      );
-    })
-    //далее обрабатываем данные (вопросы) которые мы получили с базы realtime firebase
-    .then(() => {
-      modalWindow.classList.remove("show");
-      const backdropElements = document.querySelectorAll(".modal-backdrop");
-      backdropElements.forEach((backdropElement) => {
-        backdropElement.parentNode.removeChild(backdropElement);
-      });
-      // const myModal = document.getElementById('modal-open')
-      // myModal.style = 'remove'
+              console.log('user', credentials)
+              localStorage.setItem("user-info", JSON.stringify({
+                  userUid: user.uid,
+                  userName: snapshot.val().userName
+                }))
+                localStorage.setItem("user-creds", JSON.stringify(credentials.user));
 
-      // const bacdrop = document.querySelector('.modal-backdrop')
-      // bacdrop
-      console.log("work");
-      console.log("dont work");
+                return user.getIdToken() 
+          }
     })
+    //Здесь .then((idToken) => {...}) обрабатывает результат вызова getIdToken(). Когда промис разрешается, он передает значение idToken в следующий блок .then()
+   
+    
+    })
+    .then((idToken) => {  return Question.getQuestions(idToken);
+    })     
+      .then(removeBg)
     .catch((error) => {
-    loginErrorMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+      loginErrorMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
     <path d="M6.13683 3.21846C5.78463 3.382 5.63369 3.57068 5.63369 3.84427C5.63369 4.02351 5.66199 4.08012 6.04565 4.64615C6.39154 5.16186 6.49532 5.24993 6.76576 5.24993C6.94815 5.24993 7.20602 5.12099 7.31923 4.97634C7.41041 4.85684 7.45758 4.64615 7.42614 4.51092C7.3947 4.36941 6.97018 3.49521 6.87268 3.36313C6.7752 3.23733 6.57709 3.13672 6.41984 3.13672C6.3601 3.13672 6.23117 3.17445 6.13683 3.21846ZM13.4136 3.19646C13.3413 3.2279 13.2469 3.30337 13.2029 3.36311C13.1023 3.49205 12.6809 4.36627 12.6463 4.51092C12.5331 4.98891 13.1526 5.42288 13.5928 5.17443C13.6935 5.11783 13.7878 5.00148 14.0268 4.64613C14.4104 4.08009 14.4387 4.02349 14.4387 3.84424C14.4387 3.57066 14.2878 3.38198 13.9356 3.21846C13.7312 3.12099 13.5897 3.11783 13.4136 3.19646ZM9.7186 4.09269C9.53935 4.13986 9.3098 4.27193 9.17772 4.40401C9.04249 4.54238 8.44501 5.34113 7.8947 6.12729C6.15256 8.60842 4.58338 11.4323 3.41984 14.1745L3.22803 14.6304V14.9606C3.22803 15.2688 3.23432 15.3034 3.32866 15.4984C3.50791 15.8631 3.8601 16.1242 4.27206 16.187C4.37267 16.2028 4.95131 16.2436 5.55508 16.2814C8.75319 16.4669 11.3412 16.448 14.6274 16.2185C15.7563 16.1367 15.9419 16.1116 16.162 16.0078C16.5394 15.8285 16.8224 15.4134 16.8538 14.9889C16.8727 14.7185 16.8349 14.577 16.618 14.0644C15.4576 11.3411 13.9041 8.56125 12.1494 6.06125C11.5802 5.25306 10.9607 4.44174 10.8349 4.34427C10.5016 4.08012 10.0991 3.98891 9.7186 4.09269ZM10.4356 7.37887C10.6368 7.4166 10.7815 7.52981 10.8758 7.72476L10.9607 7.89457V10.9575L10.8758 11.1273C10.7343 11.4134 10.5488 11.4983 10.0456 11.5015C9.69343 11.5015 9.48904 11.4543 9.35697 11.338C9.13055 11.1367 9.13999 11.2279 9.13999 9.42604C9.13999 7.96061 9.14626 7.7971 9.19343 7.70906C9.2752 7.56125 9.45444 7.41974 9.58652 7.39773C9.65256 7.38514 9.72173 7.37257 9.73746 7.36627C9.80036 7.34427 10.3066 7.3537 10.4356 7.37887ZM10.6243 12.5927C10.8287 12.6996 10.9167 12.8443 10.9544 13.1242C11.0016 13.4952 10.9639 14.1116 10.8853 14.2657C10.7438 14.5424 10.4702 14.6367 9.88527 14.6021C9.50162 14.5801 9.35381 14.5172 9.22803 14.3254C9.13999 14.1965 9.13999 14.187 9.13055 13.6273C9.11796 13.0298 9.13683 12.8914 9.25319 12.7468C9.40098 12.5581 9.60853 12.5078 10.14 12.5235C10.4261 12.5298 10.5331 12.5455 10.6243 12.5927Z" fill="#FF2828"/>
     <path d="M10.1818 4.09172C10.0285 4.16141 9.73844 4.53353 9.60636 4.66561C9.47115 4.80398 9.17792 5.14124 8.62759 5.9274C7.06707 8.47851 6.72509 9.05634 5.1567 11.9101L4.26283 13.8912L3.90823 14.6106C3.90823 14.9188 3.89649 15.6758 4.35481 15.9667C4.45542 15.9824 4.94205 16.2513 5.54582 16.289C8.74393 16.4746 11.332 16.4557 14.6181 16.2261C15.7471 16.1444 15.9326 16.1192 16.1527 16.0154C16.5301 15.8362 16.8131 15.4211 16.8446 14.9966C16.8634 14.7261 16.8257 14.5846 16.6087 14.072C15.4483 11.3488 13.8949 8.56891 12.1402 6.06891C11.571 5.26073 10.9601 4.42917 10.8304 4.33936C10.5238 4.12709 10.3351 4.02205 10.1818 4.09172ZM10.4263 7.38653C10.6276 7.42426 10.7722 7.53747 10.8666 7.73242L10.9515 7.90223V10.9651L10.8666 11.1349C10.7251 11.4211 10.5395 11.506 10.0364 11.5092C9.68419 11.5092 9.47978 11.462 9.34771 11.3456C9.12129 11.1444 9.13072 11.2356 9.13072 9.4337C9.13072 7.96827 9.13702 7.80476 9.18419 7.71671C9.26594 7.56891 9.44518 7.4274 9.57726 7.40539C9.64329 7.3928 9.71249 7.38023 9.7282 7.37393C9.7911 7.35193 10.2974 7.36136 10.4263 7.38653ZM10.615 12.6003C10.8194 12.7073 10.9074 12.8519 10.9452 13.1318C10.9923 13.5029 10.9546 14.1192 10.876 14.2733C10.7345 14.55 10.4609 14.6444 9.87601 14.6098C9.49235 14.5878 9.34457 14.5249 9.21877 14.3331C9.13072 14.2041 9.13072 14.1947 9.12129 13.6349C9.10872 13.0375 9.12759 12.8991 9.24393 12.7544C9.39174 12.5658 9.59929 12.5154 10.1307 12.5312C10.4169 12.5375 10.5238 12.5532 10.615 12.6003Z" fill="#FF7582"/>
     <path d="M3.48602 5.84163C3.33191 5.8888 3.18727 6.02717 3.06462 6.24415C2.88538 6.56491 2.91054 6.8259 3.1401 7.04288C3.28474 7.17812 4.27217 7.63408 4.42311 7.63408C4.81304 7.63408 5.15583 7.16868 5.03632 6.80076C4.97658 6.61835 4.86337 6.51144 4.37908 6.19069C3.81304 5.81019 3.71557 5.77246 3.48602 5.84163ZM16.247 5.84793C16.0961 5.90453 15.2439 6.4863 15.1558 6.59321C14.9735 6.81019 14.9672 7.0712 15.1401 7.33849C15.2061 7.43913 15.2879 7.51774 15.3822 7.56177C15.615 7.68125 15.7156 7.66238 16.3099 7.37937C17.0049 7.05234 17.1181 6.94227 17.1244 6.60894C17.1244 6.47687 17.1024 6.41083 17.0018 6.23472C16.9231 6.09951 16.8288 5.98314 16.7502 5.9297C16.6055 5.82906 16.3885 5.79446 16.247 5.84793ZM2.42311 9.55233C2.2816 9.59321 2.17469 9.68441 2.08979 9.82906C2.01745 9.9517 2.00488 10.0083 2.00488 10.2253C2.00802 10.6026 2.1338 10.8133 2.41682 10.9077C2.59606 10.9674 3.65583 10.8888 3.83507 10.8039C4.27847 10.5932 4.29418 9.89196 3.85708 9.66554C3.7596 9.61523 3.62123 9.59321 3.21243 9.56177C2.61809 9.51774 2.53632 9.51774 2.42311 9.55233ZM16.8131 9.56177C16.2848 9.60578 16.1433 9.65295 16.0175 9.83535C15.8539 10.0775 15.8571 10.4171 16.0238 10.6372C16.1684 10.8228 16.3068 10.8637 16.9577 10.9077C17.4105 10.936 17.5678 10.936 17.6558 10.9077C17.9389 10.8133 18.0646 10.6026 18.0678 10.2253C18.0678 10.0052 18.0552 9.9517 17.9829 9.82906C17.8131 9.5366 17.6433 9.49573 16.8131 9.56177Z" fill="#FF2828"/>
   </svg>
-  <span>${errorMsg[error.code]||'Произошла ошибка'}</span>`
+  <span>${errorMsg[error.code] || "Произошла ошибка"}</span>`;
+      console.error(error);
     })
     .catch((error) => {
       console.log("ошибка закрытия модального окна", error.message);
     });
+}
+
+// function userSignOut() {
+//   signOut(auth)
+//   .then(()=> {
+//     localStorage.removeItem('user-creds')
+//     console.log('удален')
+//   })
+//   .catch((error) => {
+//     console.log(error)
+//   })
+//   console.log("ощибка")
+// }
+
+
+
+function removeBg() {
+  modalWindow.classList.remove("show");
+  const backdropElements = document.querySelectorAll(".modal-backdrop");
+  backdropElements.forEach((backdropElement) => {
+    backdropElement.parentNode.removeChild(backdropElement);
+  })
 }
 
 
