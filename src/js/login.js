@@ -1,12 +1,17 @@
 import { app } from "./firebaseConfig";
+
 import { getDatabase, get, set, ref, child } from "firebase/database";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { Question } from "./question";
+import { async } from "regenerator-runtime";
 
+const provider = new GoogleAuthProvider();
 const db = getDatabase();
 const auth = getAuth(app);
 const dbref = ref(db);
@@ -17,8 +22,6 @@ const userPasswordInput = document.getElementById("userPassword");
 const regErrorMsg = document.getElementById("signup-msg");
 const modalWindow = document.getElementById("exampleModal");
 const userAccName = document.querySelector(".author");
-
-
 
 //обработчик формы регистрации
 function regFormHandler(event) {
@@ -44,13 +47,16 @@ function regFormHandler(event) {
           userEmail: userEmail,
         });
         localStorage.setItem(
-          "user-creds",
-          JSON.stringify({ userUid: user.uid })
+          "user-info",
+          JSON.stringify({
+            userUid: user.uid,
+            userName: userName,
+          })
         );
         userAccName.innerHTML = `<span>${userName}</span>`;
       })
       .then(() => {
-        return removeBg();
+        removeBg();
       })
       // Сохраняем информацию о пользователе в базу данных
       .catch((error) => {
@@ -76,6 +82,12 @@ const errorMsg = {
   "auth/user-not-found": "Пользователь с таким email не найден",
 };
 
+function showLoader() {
+  document.querySelector(".preloader").style.display = "flex";
+}
+function hideLoader() {
+  document.querySelector(".preloader").style.display = "none";
+}
 
 //авторизация пользователя
 const loginErrorMsg = document.getElementById("signin-msg");
@@ -83,6 +95,7 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 
 function signInUser(event) {
+  
   const email = emailInput.value;
   const password = passwordInput.value;
   event.preventDefault();
@@ -94,7 +107,9 @@ function signInUser(event) {
           let userData = snapshot.val();
           //при успешном авторизации в user сохраняем данные пользователя которые нам возвращает промис чтобы получить токен
           console.log("work2");
-          localStorage.setItem( "user-info", JSON.stringify({
+          localStorage.setItem(
+            "user-info",
+            JSON.stringify({
               userUid: user.uid,
               userName: userData[user.uid].userName,
             })
@@ -109,7 +124,9 @@ function signInUser(event) {
     .then((idToken) => {
       return Question.getQuestions(idToken);
     })
-    .then(removeBg)
+    .then(() => {
+      removeBg();
+    })
     .catch((error) => {
       loginErrorMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" fill="none">
       <path fill="#FF2828" d="M6.137 3.218c-.352.164-.503.353-.503.626 0 .18.028.236.412.802.346.516.45.604.72.604.182 0 .44-.129.553-.274a.64.64 0 0 0 .107-.465c-.031-.142-.456-1.016-.553-1.148a.64.64 0 0 0-.453-.226.88.88 0 0 0-.283.081Zm7.277-.022a.612.612 0 0 0-.211.167c-.1.129-.522 1.003-.557 1.148-.113.478.507.912.947.663.1-.056.195-.173.434-.528.383-.566.412-.623.412-.802 0-.273-.151-.462-.503-.626-.205-.097-.346-.1-.522-.022Zm-3.695.897c-.18.047-.41.179-.541.311-.136.138-.733.937-1.283 1.723a44.795 44.795 0 0 0-4.475 8.047l-.192.456v.33c0 .309.006.343.1.538.18.365.532.626.944.689.1.016.68.057 1.283.094 3.198.186 5.786.167 9.072-.063 1.13-.081 1.315-.106 1.535-.21.377-.18.66-.595.692-1.02.019-.27-.02-.411-.236-.924a44.728 44.728 0 0 0-4.469-8.003c-.569-.808-1.188-1.62-1.314-1.717-.333-.264-.736-.355-1.116-.251Zm.717 3.286c.2.038.345.15.44.346l.085.17v3.063l-.085.17c-.142.285-.327.37-.83.373-.353 0-.557-.047-.689-.163-.226-.201-.217-.11-.217-1.912 0-1.465.006-1.629.053-1.717.082-.148.261-.29.394-.311.066-.013.135-.025.15-.032.063-.022.57-.012.699.013Zm.188 5.214c.205.107.293.251.33.531.048.371.01.988-.069 1.142-.141.276-.415.37-1 .336-.383-.022-.531-.085-.657-.277-.088-.128-.088-.138-.097-.698-.013-.597.006-.736.122-.88.148-.189.356-.24.887-.223.286.006.393.022.484.069Z"/>
@@ -126,6 +143,24 @@ function signInUser(event) {
 
 export { signInUser };
 
+//функция sign in with google
+const signInwithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider)
+    
+      const user = result.user;
+      console.log(user);
+      userAccName.innerHTML = user.displayName;
+  
+    removeBg()
+  }
+    catch(error) {
+      console.log(error.code);
+    };
+};
+
+export { signInwithGoogle };
+
 function removeBg() {
   modalWindow.classList.remove("show");
   const backdropElements = document.querySelectorAll(".modal-backdrop");
@@ -133,9 +168,3 @@ function removeBg() {
     backdropElement.parentNode.removeChild(backdropElement);
   });
 }
-
-
-
-
-// const userAccName = document.querySelector(".author");
-// userAccName.innerHTML = `<span>${userInfo.userName}</span>`;
