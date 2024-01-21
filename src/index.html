@@ -17,65 +17,70 @@
             <button id="signOutBtn" class="header-user-login__sign-out btn">Выйти</button>
           </div>
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-
-            <div class="modal-dialog">
-              
+            <div class="modal-dialog">              
               <div id="modal-content" class="modal-content">
-                <form id="register-form" class="register-form form-floating">
+                
+                <div class="register-form-wrap">
                   <div id="register-title" class="register-form__header modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
                  <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
+                <form id="register-form" class="register-form form-floating">                  
                   <div class="modal-body">
-                    <div class="register-form__content form-floating mb-3">
-                      <div class="form-floating mb-4">
-                        <input type="text" class="form-control" id="userName" placeholder="aigerim">
-                        <label for="userName">Имя</label>
-                      </div>
-                      <div class="form-floating mb-4">
-                        <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
-                        <label for="userEmail">Адрес электронной почты</label>
-                      </div>
-                      <div class="form-floating mb-4">
-                        <input type="password" class="form-control" id="userPassword" placeholder="Пароль">
-                        <label for="userPassword">Придумайте пароль</label>
-                      </div>
+                    <div class="register-form__content form-floating">                     
+                        <div class="input-control form-floating mb-4">
+                          <input type="text" class="form-control" id="userName" placeholder="aigerim">
+                          <label for="userName">Имя</label>
+                          <div class="error"></div>
+                        </div>
+                        <div class="input-control form-floating mb-4">
+                          <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
+                          <label for="userEmail">Адрес электронной почты</label>
+                          <div class="error"></div>
+                        </div>
+                        <div class="input-control form-floating mb-4">
+                          <input type="password" class="form-control" id="userPassword" placeholder="Пароль">
+                          <label for="userPassword">Придумайте пароль</label>
+                          <div class="error"></div>
+                        </div>
                       <p id="signup-msg" class="signup-msg"></p>
                       <button id="sign-in-link" class="signin ms-2"><span>У вас уже есть аккаунт:</span> Вход</button>
                       <div class="modal-footer">
                         <button id="signup-btn" type="submit" class="signup-btn btn">Зарегистрироваться</button>
                           <p class="divider-text">или</p>
-                        <button id="googleSignUpBtn" class="signin-google btn">войти с Google</button>
-                     
                       </div>
                     </div>
                   </div>
                 </form>
-                <form id="signin-form" class="signin-form form-floating" >
+                <button id="googleSignUpBtn" class="signin-google btn">войти с Google</button>
+                </div>
+                <div class="signin-form-wrap">
                   <div id="signin-title" class="signin-form__header modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Вход</h5>
                  <button class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
-                  <div class="modal-body">
-                    <div class="signin-form__content form-floating mb-3">
-                      <div class="form-floating mb-4">
-                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
-                        <label for="email">Адрес электронной почты</label>
-                      </div>
-                      <div class="form-floating mb-4">
-                        <input type="password" class="form-control" id="password" placeholder="Пароль">
-                        <label for="password">Пароль</label>
-                      </div>
-                      <p id="signin-msg" class="signin-msg"></p>
-                      <button id="sign-up-link" class="signup ms-2">Регистрация</button>
-                      <div class="modal-footer">
-                        <button id="signin-btn" type="submit" class="signin-btn btn">Войти</button>
-                        <p class="divider-text">или</p>
-                        <button id="googleSignInBtn" class="signin-google btn">войти с Google</button>
+                  <form id="signin-form" class="signin-form form-floating" >                  
+                    <div class="modal-body">
+                      <div class="signin-form__content form-floating">
+                        <div class="form-floating mb-4">
+                          <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                          <label for="email">Адрес электронной почты</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                          <input type="password" class="form-control" id="password" placeholder="Пароль">
+                          <label for="password">Пароль</label>
+                        </div>
+                        <p id="signin-msg" class="signin-msg"></p>
+                        <button id="sign-up-link" class="signup ms-2">Регистрация</button>
+                        <div class="modal-footer">
+                          <button id="signin-btn" type="submit" class="signin-btn btn">Войти</button>
+                          <p class="divider-text">или</p>                          
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </form>
+                  </form>
+                  <button id="googleSignInBtn" class="signin-google btn">войти с Google</button>
+                </div>                
                  </div>
                  <div class="preloader">
                   <div class="loadingio-spinner-spinner-8hu7106doio">
