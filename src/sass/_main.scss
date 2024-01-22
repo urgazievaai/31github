@@ -13,7 +13,6 @@ justify-content: center;
   margin: 0;
   padding: 0;
   background-color: #eaedee;
-  // width: 300px;
   height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
@@ -47,34 +46,23 @@ justify-content: center;
   font-size: 14px;
 }
 
-
-.recent-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-}
 .recent-post__text {
   color: $grey-color;
   font-size: 16px;
 }
 
-.btn {
+.btn,
+.btn:disabled {
   background-color: $global-color;
   color: $white-color;
+  border-radius: 50px;
   cursor: pointer;
+  &:hover {
+    border:  solid 1px $global-color ;
+    color: $global-color;
+  }
 }
-.btn:hover,
-.button:active {
-  border:  solid 1px $global-color ;
-  color: $global-color;
-}
-.btn:disabled{
-  background-color: $global-color;
-  border: none;
-  color: $white-color;
-  cursor: not-allowed;
-}
+
 .generete-url {
   display: none;
 }
