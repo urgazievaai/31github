@@ -4,6 +4,32 @@
   display: flex;
   justify-content: space-between;
 }
+
+.input-control.error input{
+  border-color: #ff2222;
+}
+.input-control.success input{
+  border-color: #22ff64;
+}
+.input-control .error {
+  color: #ff2222;
+  font-size: 9px;
+  height: 13px;
+}
+
+.form-floating > label {
+  z-index: 0;  
+}
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 24px 0 0 0;
+}
+.modal-body {
+  margin: 12px 0 0 0;
+  padding: 0;
+}
 .header-user-login {
   display: flex;
   justify-content: flex-end;
@@ -31,7 +57,9 @@
   justify-content: flex-end;
 }
 
-
+.signup-btn, .signin-btn {
+  width: 80%;
+}
 .signin, .signup {
   align-self: center;
   text-decoration: none;
@@ -44,17 +72,27 @@
     color: #212529;
   }
 }
-
-.register-form {
+.signin-google {
+  align-self: center;
+  justify-content: center;
+  margin: 4px 0 0 0;
+}
+.register-form-wrap, .signin-form-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 30px 20px;
+}
+.register-form-wrap {
   display: block;
 }
-.signin-form{
+.signin-form-wrap {
   display: none;
 }
-.close-btn {
+.signin-google {
   background: transparent;
     border: solid  1px $global-color;
     color: $global-color;
+    width: 80%;
     &:hover {
       background-color: $global-color;
       color: $white-color;
@@ -69,3 +107,6 @@
   font-weight: 400;
   padding-left: 8px;
 }
+
+
+
